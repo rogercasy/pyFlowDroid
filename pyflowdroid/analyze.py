@@ -60,7 +60,6 @@ def analyze_apk(path: str, sources_and_sinks: str = "", save_logs: bool = True) 
 
     # Check if path exists, is a file and its extension is .apk
     if apk_path.exists() and apk_path.is_file() and str(path).endswith(".apk"):
-
         # Create the path for required resources
         fd_path = Path(PYFLOWDROID_PATH, FLOWDROID_EXEC_NAME)
         android_path = Path(PYFLOWDROID_PATH, ANDROID_FOLDER_NAME)
@@ -144,7 +143,6 @@ def analyze_apk_folder(
 
     # Check if path exists and is a folder
     if folder_path.exists() and folder_path.is_dir():
-
         # Retreive all apk files in the folder
         apk_paths = [
             str(apk_path)

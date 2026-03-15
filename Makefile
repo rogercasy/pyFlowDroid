@@ -1,11 +1,11 @@
 test:
 	pytest
 lint:
-	flake8
+	ruff check
 typecheck:
 	mypy
 formatcheck:
-	black --check .
+	ruff format --check
 
 qa:
 	make -s formatcheck

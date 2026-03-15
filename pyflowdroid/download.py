@@ -74,7 +74,6 @@ class ApkProvider(metaclass=abc.ABCMeta):
 
         # Check if the apk file already exists and if force_redownload is False
         if apk_path.exists() and not self.force_redownload:
-
             # If the apk file already exists and force_redownload is False skips
             # the download
             logging.info(f"{apk_name} already exists")
@@ -85,9 +84,10 @@ class ApkProvider(metaclass=abc.ABCMeta):
             logging.info(f"Downloading {apk_name} from {apk_url}")
             hdr = {"User-Agent": "Mozilla/5.0"}
             req = urllib.request.Request(apk_url, headers=hdr)
-            with urllib.request.urlopen(req) as response, open(
-                apk_path, "wb"
-            ) as out_file:
+            with (
+                urllib.request.urlopen(req) as response,
+                open(apk_path, "wb") as out_file,
+            ):
                 shutil.copyfileobj(response, out_file)
         # Notify if the apk file could not be downloaded
         except urllib.error.HTTPError:
@@ -160,14 +160,13 @@ class CubapkProvider(ApkProvider):
                 )
                 text = urlopen(request).read()
             except urllib.error.HTTPError:
-                logging.info(f"Index of {self.base_url} has {page-1} pages")
+                logging.info(f"Index of {self.base_url} has {page - 1} pages")
                 break
 
             # Parses the website
             soup = BeautifulSoup(text, features="lxml")
             data = soup.findAll("div", attrs={"class": "app-data"})
             for div in data:
-
                 # Parse the apk name
                 raw_name = div.find("div", attrs={"class": "app-title"}).text
                 apk_name = "".join(filter(str.isalnum, raw_name))
@@ -190,7 +189,7 @@ class CubapkProvider(ApkProvider):
 _providers = {"cubapk.com": CubapkProvider}
 
 
-def get_provider(name: str, force_redownload:bool=False) -> ApkProvider:
+def get_provider(name: str, force_redownload: bool = False) -> ApkProvider:
     """
     Returns an ApkProvider instance with the given name. If there are no
     matches with the given name, the default provider is returned.
